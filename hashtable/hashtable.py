@@ -52,12 +52,22 @@ class HashTable:
 
     def fnv1(self, key):
         """
+        0xcbf29ce484222325
+        0x00000100000001B3
         FNV-1 Hash, 64-bit
 
         Implement this, and/or DJB2.
         """
 
         # Your code here
+        byte_list = str(key).encode()
+        hashv = 0xcbf29ce484222325
+        for byte in byte_list:
+            hashv *= 0x00000100000001B3
+            hashv ^= byte
+
+        return hashv
+
 
 
     def djb2(self, key):
@@ -74,8 +84,8 @@ class HashTable:
         Take an arbitrary key and return a valid integer index
         between within the storage capacity of the hash table.
         """
-        #return self.fnv1(key) % self.capacity
-        return self.djb2(key) % self.capacity
+        return self.fnv1(key) % self.capacity
+        # return self.djb2(key) % self.capacity
 
     def put(self, key, value):
         """
@@ -86,6 +96,21 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        entry = HashTableEntry(key,value)
+
+        if self.store[index] is not None:
+            curEntry = self.store[index]
+            print(curEntry.key," ", key)
+            while curEntry is not None:
+                if curEntry.key == key:
+                    curEntry.value = entry.value
+                    self.length += 1
+                    self.store[index] = entry
+                curEntry = curEntry.next
+        else:
+            self.store[index] = entry
+            self.length+=1
 
 
     def delete(self, key):
@@ -108,6 +133,13 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        cur = self.store[index]
+        while cur is not None:
+            if cur.key == key:
+                return cur.value
+            cur = cur.next
+        return None
 
 
     def resize(self, new_capacity):
