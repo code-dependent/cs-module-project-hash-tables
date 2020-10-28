@@ -98,19 +98,30 @@ class HashTable:
         # Your code here
         index = self.hash_index(key)
         entry = HashTableEntry(key,value)
+        # n = self.store[index]
+        # self.store[index] = entry
+        # self.store[index].next = n
+        # self.length += 1
+
 
         if self.store[index] is not None:
             curEntry = self.store[index]
-            print(curEntry.key," ", key)
+            # print(curEntry.key," ", key)
             while curEntry is not None:
                 if curEntry.key == key:
                     curEntry.value = entry.value
-                    self.length += 1
-                    self.store[index] = entry
+                    return
                 curEntry = curEntry.next
+            entry.next = self.store[index]
+            self.store[index] = entry
+            self.length+=1
+            if self.get_load_factor > .7:
+                self.resize((self.capacity * 2))
         else:
             self.store[index] = entry
             self.length+=1
+            if self.get_load_factor > .7:
+                self.resize((self.capacity * 2))
 
 
     def delete(self, key):
@@ -122,6 +133,27 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        index = self.hash_index(key)
+        prev = self.store[index]
+        cur = self.store[index].next
+        if prev.key == key:
+            prev.next = None
+            self.store[index] = cur
+            self.length-=1
+            if self.get_load_factor < .2:
+                self.resize((self.capacity // 2))
+            return prev.value
+        while cur is not None:
+            if cur.key == key:
+                prev.next = cur.next
+                cur.next = None
+                self.length-=1
+                if self.get_load_factor < .2:
+                    self.resize((self.capacity // 2))
+                    return cur.value
+            prev = prev.next
+            cur = cur.next
+        print("No found element with specified key")
 
 
     def get(self, key):
@@ -150,6 +182,22 @@ class HashTable:
         Implement this.
         """
         # Your code here
+        # old = self.store
+        # self.capacity = new_capacity
+        # self.store = [None] * new_capacity
+        # self.length = 0
+        newHashtable = HashTable(new_capacity)
+        for node in self.store: #index1
+            cur = node
+            while cur is not None:
+                newHashtable.put(cur.key, cur.value)
+                cur = cur.next
+
+
+        self.store = newHashtable.store
+        self.capacity = newHashtable.capacity
+        newHashtable = None
+
 
 
 
