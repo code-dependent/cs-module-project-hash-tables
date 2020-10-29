@@ -115,12 +115,12 @@ class HashTable:
             entry.next = self.store[index]
             self.store[index] = entry
             self.length+=1
-            if self.get_load_factor > .7:
+            if self.get_load_factor() > .7:
                 self.resize((self.capacity * 2))
         else:
             self.store[index] = entry
             self.length+=1
-            if self.get_load_factor > .7:
+            if self.get_load_factor() > .7:
                 self.resize((self.capacity * 2))
 
 
@@ -140,7 +140,7 @@ class HashTable:
             prev.next = None
             self.store[index] = cur
             self.length-=1
-            if self.get_load_factor < .2:
+            if self.get_load_factor() < .2:
                 self.resize((self.capacity // 2))
             return prev.value
         while cur is not None:
@@ -148,7 +148,7 @@ class HashTable:
                 prev.next = cur.next
                 cur.next = None
                 self.length-=1
-                if self.get_load_factor < .2:
+                if self.get_load_factor() < .2:
                     self.resize((self.capacity // 2))
                     return cur.value
             prev = prev.next
