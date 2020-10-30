@@ -2,11 +2,9 @@
 # decode it.
 
 # Your code here
-import string as s
-freq = ['E','T','A','O','H','N','R','I','S','D','L','W','U','G','F','B','M','Y','C','P','K','V','Q','J','X','Z']
-letter_freq = {char:0 for char in s.ascii_uppercase}
-
 def cypher_cracker(filename):
+    freq = ['E','T','A','O','H','N','R','I','S','D','L','W','U','G','F','B','M','Y','C','P','K','V','Q','J','X','Z']
+    letter_freq = {char:0 for char in freq}
 
     string = ""
     with open(filename, 'r') as f:
